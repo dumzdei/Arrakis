@@ -1,0 +1,83 @@
+! VERSION = 6.00
+BEGIN_HEADER
+ ICCAP_INPUTS
+  vg         V  G D CM 0.001 LIN        1    -1.8       1.8        37   0.1       
+ ICCAP_OUTPUTS
+  cg_sdb     C  G D CM B
+ ICCAP_VALUES
+  MASTER_SETUP_TYPE "~c_g_dsb~"
+  TYPE "1"
+  TEMP "25.0000"
+  IS_TNOM "1.00000"
+  MAIN.W "2.000m"
+  MAIN.L "10.00u"
+  MAIN.AD "2.000n"
+  MAIN.AS "2.000n"
+  MAIN.PD "4.400m"
+  MAIN.PS "4.400m"
+  MAIN.NF "200.0"
+  MAIN.M "1"
+  MAIN.NRD "0.000"
+  MAIN.NRS "0.000"
+  MAIN.LDRIFT1 "1E-06"
+  MAIN.LDRIFT2 "1E-06"
+  MAIN.SA "0"
+  MAIN.SB "0"
+  MAIN.SD "0"
+  MAIN.SCA "0"
+  MAIN.SCB "0"
+  MAIN.SCC "0"
+  MAIN.SC "0"
+  MODULE "Mod_C3"
+  PIN_H "10"
+  PIN_L "9+11+12"
+  PIN_GND ""
+  XY_ID ""
+  FUNC "Overlap2 GDSB"
+  WPE "WPE ref"
+  COMMENT ""
+  TypeTCI "36"
+END_HEADER
+
+BEGIN_DB
+
+ #vg              cg_sdb         
+  -1.8            1.7391e-010    
+  -1.7            1.72408e-010   
+  -1.6            1.70516e-010   
+  -1.5            1.68116e-010   
+  -1.4            1.65008e-010   
+  -1.3            1.60806e-010   
+  -1.2            1.54704e-010   
+  -1.1            1.45085e-010   
+  -1              1.29706e-010   
+  -0.9            1.09492e-010   
+  -0.8            9.09904e-011   
+  -0.7            7.64065e-011   
+  -0.6            6.58457e-011   
+  -0.5            5.82502e-011   
+  -0.4            5.26349e-011   
+  -0.3            4.83388e-011   
+  -0.2            4.49473e-011   
+  -0.1            4.22061e-011   
+  0               4.00252e-011   
+  0.1             3.89429e-011   
+  0.2             4.41406e-011   
+  0.3             8.30115e-011   
+  0.4             1.44172e-010   
+  0.5             1.63289e-010   
+  0.6             1.6624e-010    
+  0.7             1.66841e-010   
+  0.8             1.67133e-010   
+  0.9             1.67368e-010   
+  1               1.67582e-010   
+  1.1             1.67781e-010   
+  1.2             1.67968e-010   
+  1.3             1.68145e-010   
+  1.4             1.68312e-010   
+  1.5             1.6847e-010    
+  1.6             1.6862e-010    
+  1.7             1.68763e-010   
+  1.8             1.68899e-010   
+END_DB
+

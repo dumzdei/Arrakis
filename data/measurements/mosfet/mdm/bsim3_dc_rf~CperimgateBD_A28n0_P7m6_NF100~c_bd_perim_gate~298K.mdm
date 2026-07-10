@@ -1,0 +1,67 @@
+! VERSION = 6.00
+BEGIN_HEADER
+ ICCAP_INPUTS
+  vb         V  B D CM 0.1 LIN        1    -1.8       0.2        21   0.1       
+ ICCAP_OUTPUTS
+  cbd        C  B D CM B
+ ICCAP_VALUES
+  MASTER_SETUP_TYPE "~c_bd_perim_gate~"
+  TYPE "1"
+  TEMP "25.0000"
+  IS_TNOM "1.00000"
+  MAIN.W "5.000m"
+  MAIN.L "10.00u"
+  MAIN.AD "28.00n"
+  MAIN.AS "0.000"
+  MAIN.PD "7.600m"
+  MAIN.PS "0.000"
+  MAIN.NF "100.0"
+  MAIN.M "1"
+  MAIN.NRD "0.000"
+  MAIN.NRS "0.000"
+  MAIN.LDRIFT1 "1E-06"
+  MAIN.LDRIFT2 "1E-06"
+  MAIN.SA "0"
+  MAIN.SB "0"
+  MAIN.SD "0"
+  MAIN.SCA "0"
+  MAIN.SCB "0"
+  MAIN.SCC "0"
+  MAIN.SC "0"
+  MODULE "Mod_C1"
+  PIN_H "4"
+  PIN_L "1"
+  PIN_GND "2+3"
+  XY_ID ""
+  FUNC "BD Perim Gate"
+  WPE "WPE ref"
+  COMMENT ""
+  TypeTCI "30"
+END_HEADER
+
+BEGIN_DB
+
+ #vb              cbd            
+  -1.8            1.46373e-011   
+  -1.7            1.49047e-011   
+  -1.6            1.51873e-011   
+  -1.5            1.54866e-011   
+  -1.4            1.58044e-011   
+  -1.3            1.61426e-011   
+  -1.2            1.65034e-011   
+  -1.1            1.68896e-011   
+  -1              1.73043e-011   
+  -0.9            1.77512e-011   
+  -0.8            1.82347e-011   
+  -0.7            1.87601e-011   
+  -0.6            1.93338e-011   
+  -0.5            1.99641e-011   
+  -0.4            2.06609e-011   
+  -0.3            2.14373e-011   
+  -0.2            2.23102e-011   
+  -0.1            2.33031e-011   
+  0               2.44487e-011   
+  0.1             2.5777e-011    
+  0.2             2.73458e-011   
+END_DB
+

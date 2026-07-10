@@ -1,0 +1,67 @@
+! VERSION = 6.00
+BEGIN_HEADER
+ ICCAP_INPUTS
+  vb         V  B D CM 0.1 LIN        1    -1.8       0.2        21   0.1       
+ ICCAP_OUTPUTS
+  cbd        C  B D CM B
+ ICCAP_VALUES
+  MASTER_SETUP_TYPE "~c_bd_area~"
+  TYPE "1"
+  TEMP "25.0000"
+  IS_TNOM "1.00000"
+  MAIN.W "10.00u"
+  MAIN.L "10.00u"
+  MAIN.AD "28.00n"
+  MAIN.AS "0.000"
+  MAIN.PD "760.0u"
+  MAIN.PS "0.000"
+  MAIN.NF "1.000"
+  MAIN.M "1"
+  MAIN.NRD "0.000"
+  MAIN.NRS "0.000"
+  MAIN.LDRIFT1 "1E-06"
+  MAIN.LDRIFT2 "1E-06"
+  MAIN.SA "0"
+  MAIN.SB "0"
+  MAIN.SD "0"
+  MAIN.SCA "0"
+  MAIN.SCB "0"
+  MAIN.SCC "0"
+  MAIN.SC "0"
+  MODULE "Mod_C1"
+  PIN_H "24"
+  PIN_L "21"
+  PIN_GND "22+23"
+  XY_ID ""
+  FUNC "BD Area"
+  WPE "WPE ref"
+  COMMENT ""
+  TypeTCI "30"
+END_HEADER
+
+BEGIN_DB
+
+ #vb              cbd            
+  -1.8            1.02267e-011   
+  -1.7            1.04142e-011   
+  -1.6            1.06125e-011   
+  -1.5            1.08225e-011   
+  -1.4            1.10455e-011   
+  -1.3            1.12828e-011   
+  -1.2            1.15362e-011   
+  -1.1            1.18074e-011   
+  -1              1.20987e-011   
+  -0.9            1.24127e-011   
+  -0.8            1.27525e-011   
+  -0.7            1.31218e-011   
+  -0.6            1.35251e-011   
+  -0.5            1.39681e-011   
+  -0.4            1.44577e-011   
+  -0.3            1.50027e-011   
+  -0.2            1.56144e-011   
+  -0.1            1.63076e-011   
+  0               1.71021e-011   
+  0.1             1.80254e-011   
+  0.2             1.91165e-011   
+END_DB
+

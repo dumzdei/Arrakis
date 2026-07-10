@@ -1,0 +1,99 @@
+! VERSION = 6.00
+BEGIN_HEADER
+ ICCAP_INPUTS
+  vs         V  S GROUND DEFAULT 0.1 CON        0
+  vd         V  D GROUND DEFAULT 0.1 LIN        1    0          1.8        7    0.3       
+  vg         V  G GROUND DEFAULT 0.001 LIN        2    0          1.8        4    0.6       
+ ICCAP_OUTPUTS
+  cd_g       C  D G CM B
+ ICCAP_VALUES
+  MASTER_SETUP_TYPE "~c_d_g~"
+  TYPE "1"
+  TEMP "25.0000"
+  IS_TNOM "1.00000"
+  MAIN.W "10.00u"
+  MAIN.L "180.0n"
+  MAIN.AD "20.00p"
+  MAIN.AS "20.00p"
+  MAIN.PD "44.00u"
+  MAIN.PS "44.00u"
+  MAIN.NF "1.000"
+  MAIN.M "1"
+  MAIN.NRD "0.000"
+  MAIN.NRS "0.000"
+  MAIN.LDRIFT1 "1E-06"
+  MAIN.LDRIFT2 "1E-06"
+  MAIN.SA "0"
+  MAIN.SB "0"
+  MAIN.SD "0"
+  MAIN.SCA "0"
+  MAIN.SCB "0"
+  MAIN.SCC "0"
+  MAIN.SC "0"
+  MODULE "Mod_C2"
+  PIN_H "11"
+  PIN_L "12"
+  PIN_GND "13+14"
+  XY_ID ""
+  FUNC "Intrinsic"
+  WPE "WPE ref"
+  COMMENT ""
+  TypeTCI "37"
+END_HEADER
+
+BEGIN_DB
+ ICCAP_VAR vs         0              
+ ICCAP_VAR vg         0              
+
+ #vd              cd_g           
+  0               7.40015e-015   
+  0.3             7.4e-015       
+  0.6             7.4e-015       
+  0.9             7.4e-015       
+  1.2             7.4e-015       
+  1.5             7.4e-015       
+  1.8             7.4e-015       
+END_DB
+
+BEGIN_DB
+ ICCAP_VAR vs         0              
+ ICCAP_VAR vg         0.6            
+
+ #vd              cd_g           
+  0               1.00631e-014   
+  0.3             7.36664e-015   
+  0.6             7.36056e-015   
+  0.9             7.35987e-015   
+  1.2             7.35963e-015   
+  1.5             7.35949e-015   
+  1.8             7.35939e-015   
+END_DB
+
+BEGIN_DB
+ ICCAP_VAR vs         0              
+ ICCAP_VAR vg         1.2            
+
+ #vd              cd_g           
+  0               1.11754e-014   
+  0.3             7.8875e-015    
+  0.6             7.37819e-015   
+  0.9             7.36108e-015   
+  1.2             7.35855e-015   
+  1.5             7.35785e-015   
+  1.8             7.3576e-015    
+END_DB
+
+BEGIN_DB
+ ICCAP_VAR vs         0              
+ ICCAP_VAR vg         1.8            
+
+ #vd              cd_g           
+  0               1.1325e-014    
+  0.3             9.78175e-015   
+  0.6             7.62919e-015   
+  0.9             7.38104e-015   
+  1.2             7.36288e-015   
+  1.5             7.35945e-015   
+  1.8             7.35841e-015   
+END_DB
+
