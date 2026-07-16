@@ -67,7 +67,7 @@ class ConfigLoader:
     def get_config(cls, extension: str) -> Optional[FormatConfig]:
         """
         @brief  Получить конфигурацию по расширению.
-        @param  extension Расширение файла (например, '.dat')
+        @param  extension Расширение файла
         @return FormatConfig или None
         """
         if not extension.startswith('.'):

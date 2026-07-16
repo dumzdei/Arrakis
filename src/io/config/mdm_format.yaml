@@ -27,6 +27,10 @@ format:
     perimeter:
       pattern: '^\s*B\s+"?([\d\.eE\-\+uUnNmMkK]+)"?'
       type: float
+    setup:
+      pattern: 'Setup\s*"([^"]+)"'
+      type: string
+      default: 'unknown'
     device_num:
       pattern: 'Device\s*"?([\d\.]+)"?'
       type: int
@@ -43,14 +47,7 @@ format:
       end_marker: 'END_DB'
       separator: ''
       skip_comments: true
-      columns:
-        - name: 'V'
-          type: float
-        - name: 'I'
-          type: float
-          measurement: IV
-          response_variable: 'I'
-        - name: 'I2'
-          type: float
-          measurement: IV
-          response_variable: 'I2'
+      infer_columns: true
+      header_prefix: '#'
+      inferred_measurement: 'IV'
+      columns: []

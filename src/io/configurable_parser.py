@@ -10,7 +10,7 @@ import numpy as np
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
-from .config.format_config import FormatConfig, DataSectionConfig
+from .config.format_config import FormatConfig, DataSectionConfig, ColumnConfig
 from .config.config_loader import ConfigLoader
 from ..core.device import Device
 from ..core.geometry import DiodeGeometry, MOSFETGeometry
@@ -142,7 +142,7 @@ class ConfigurableParser:
         
         # Парсим каждую секцию данных
         for section_cfg in self._config.data:
-            measurements = self._parse_data_section(raw_data, section_cfg, device_id, condition)
+            measurements = self._parse_data_section(raw_data, section_cfg, device_id, condition, metadata)
             for m in measurements:
                 measurement_set.add(m)
         
@@ -153,7 +153,8 @@ class ConfigurableParser:
         raw_data: str, 
         section_cfg: DataSectionConfig,
         device_id: str,
-        condition: MeasurementCondition
+        condition: MeasurementCondition,
+        metadata: Dict[str, Any]
     ) -> List:
         """Парсинг одной секции данных."""
         lines = raw_data.split('\n')
@@ -168,32 +169,45 @@ class ConfigurableParser:
             
             # Извлекаем строки данных
             data_lines = []
+            header_line = None
             for i in range(start_idx, end_idx):
-                line = lines[i].strip()
-                
+                raw_line = lines[i]
+                stripped = raw_line.strip()
+
                 # Пропускаем пустые строки
-                if not line:
+                if not stripped:
                     continue
-                
-                """
-                @todo TODO: разобраться с комментариями
-                
+
+                # Сохраняем строку заголовка, если требуется инферировать колонки
+                if (section_cfg.infer_columns and section_cfg.header_prefix is not None
+                        and stripped.startswith(section_cfg.header_prefix)
+                        and header_line is None):
+                    header_line = stripped
+                    continue
+
                 # Пропускаем комментарии
-                if section_cfg.skip_comments and line.startswith('#'):
+                if section_cfg.skip_comments and stripped.startswith('#'):
                     continue
-                
+
                 # Пропускаем стартовые префиксы строк данных
-                if any(line.startswith(prefix) for prefix in section_cfg.skip_prefixes):
+                if any(stripped.startswith(prefix) for prefix in section_cfg.skip_prefixes):
                     continue
-                
-                # Пропускаем заголовок
+
+                # Пропускаем строку заголовка, если она задана абсолютным номером
                 if section_cfg.header_row is not None and i == section_cfg.header_row:
                     continue
-                """
-                data_lines.append(line)
-            
+
+                data_lines.append(stripped)
+
+            section_columns = section_cfg.columns
+            if section_cfg.infer_columns:
+                if header_line is None and section_cfg.header_row is not None:
+                    header_line = lines[section_cfg.header_row].strip()
+                if header_line:
+                    section_columns = self._infer_columns_from_header(header_line, section_cfg, metadata)
+
             if data_lines:
-                measurements.extend(self._parse_columns(data_lines, section_cfg, device_id, condition))
+                measurements.extend(self._parse_columns(data_lines, section_cfg, device_id, condition, section_columns))
         
         return measurements
     
@@ -226,17 +240,51 @@ class ConfigurableParser:
                 if section_cfg.end_marker in lines[i]:
                     return i
         return len(lines)
-    
+
+    def _infer_columns_from_header(
+        self,
+        header_line: str,
+        section_cfg: DataSectionConfig,
+        metadata: Dict[str, Any]
+    ) -> List[ColumnConfig]:
+        """Инференция колонок из строки заголовка."""
+        header_text = header_line.strip()
+        if section_cfg.header_prefix and header_text.startswith(section_cfg.header_prefix):
+            header_text = header_text[len(section_cfg.header_prefix):].strip()
+
+        names = header_text.split()
+        if not names:
+            raise ValueError("Не удалось инферировать колонки: пустая строка заголовка")
+
+        measurement_type = self._infer_measurement_type_from_setup(metadata.get('setup'))
+        if measurement_type is None:
+            measurement_type = section_cfg.inferred_measurement or 'IV'
+
+        columns: List[ColumnConfig] = []
+        for index, name in enumerate(names):
+            if index == 0:
+                columns.append(ColumnConfig(name=name, type='float'))
+            else:
+                columns.append(ColumnConfig(
+                    name=name,
+                    type='float',
+                    measurement=measurement_type,
+                    response_variable=name
+                ))
+        return columns
+
     def _parse_columns(
         self,
         data_lines: List[str],
         section_cfg: DataSectionConfig,
         device_id: str,
-        condition: MeasurementCondition
+        condition: MeasurementCondition,
+        columns: Optional[List[ColumnConfig]] = None
     ) -> List:
         """Парсинг колонок и создание измерений."""
+        section_columns = columns if columns is not None else section_cfg.columns
         # Словарь: имя колонки -> список значений
-        columns_data: Dict[str, List] = {col.name: [] for col in section_cfg.columns}
+        columns_data: Dict[str, List] = {col.name: [] for col in section_columns}
         
         for line in data_lines:
             if section_cfg.separator is None or section_cfg.separator.strip() == '':
@@ -246,7 +294,7 @@ class ConfigurableParser:
             row_values: Dict[str, Any] = {}
             valid_row = True
             
-            for i, col_cfg in enumerate(section_cfg.columns):
+            for i, col_cfg in enumerate(section_columns):
                 if i >= len(parts):
                     valid_row = False
                     break
@@ -268,9 +316,8 @@ class ConfigurableParser:
         measurements_by_type: Dict[str, Dict[str, np.ndarray]] = {}
         sweep_variable = None
         
-        for col_cfg in section_cfg.columns:
+        for col_cfg in section_columns:
             if col_cfg.measurement is None:
-                # Это sweep variable (например, voltage)
                 sweep_variable = col_cfg.name
                 sweep_values = np.array(columns_data[col_cfg.name])
             elif col_cfg.measurement in ('IV', 'CV'):
@@ -286,7 +333,6 @@ class ConfigurableParser:
             iv = IVMeasurement(
                 device_id=device_id,
                 condition=condition,
-                setup='configurable',
                 sweep_variable=sweep_variable,
                 sweep_values=sweep_values,
                 currents=measurements_by_type['IV']
@@ -299,7 +345,6 @@ class ConfigurableParser:
             cv = CVMeasurement(
                 device_id=device_id,
                 condition=condition,
-                setup='configurable',
                 sweep_variable=sweep_variable,
                 sweep_values=sweep_values,
                 capacitance=cv_data.get('C', np.array([])),
@@ -308,7 +353,19 @@ class ConfigurableParser:
             measurements.append(cv)
         
         return measurements
-    
+
+    def _infer_measurement_type_from_setup(self, setup: Optional[str]) -> Optional[str]:
+        """Инференция типа измерения по полю Setup."""
+        if setup is None:
+            return None
+
+        setup_text = str(setup).strip().lower()
+        if 'cv' in setup_text:
+            return 'CV'
+        if 'iv' in setup_text:
+            return 'IV'
+        return None
+
     def parse_file(self, file_path: str) -> Device:
         """Полный разбор файла в объект Device."""
         raw_data = self._read_file(file_path)

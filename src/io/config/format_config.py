@@ -49,22 +49,17 @@ class MetadataFieldConfig:
 class DataSectionConfig:
     """
     @brief  Конфигурация секции данных.
-    @tparam start_marker   Маркер начала данных (или номер строки)
-    @tparam end_marker     Маркер конца данных (опционально)
-    @tparam separator      Разделитель колонок
-    @tparam header_row     Строка с заголовками (или None)
-    @tparam skip_comments  Пропускать строки-комментарии
-    @tparam skip_prefixes  Список префиксов строк, которые нужно пропустить
-    @tparam columns        Список конфигурации колонок
+    @tparam start_marker  Маркер начала данных
+    @tparam end_marker    Маркер конца данных
+    @tparam separator     Разделитель колонок
+    @tparam header_prefix Маркер заголовков
+    @tparam header_row    Строка с заголовками
     """
-    columns: List[ColumnConfig] = field(default_factory=list)
     start_marker: Optional[str] = None
-    start_line: Optional[int] = None
     end_marker: Optional[str] = None
-    separator: str = ","
+    separator: str = " "
+    header_prefix: Optional[str] = None
     header_row: Optional[int] = None
-    skip_comments: bool = False
-    skip_prefixes: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -102,25 +97,12 @@ class FormatConfig:
         
         data_sections = []
         for section in fmt.get('data', []):
-            columns = [
-                ColumnConfig(
-                    name=col['name'],
-                    type=col.get('type', 'float'),
-                    measurement=col.get('measurement'),
-                    response_variable=col.get('response_variable')
-                )
-                for col in section.get('columns', [])
-            ]
-            
             data_sections.append(DataSectionConfig(
-                columns=columns,
                 start_marker=section.get('start_marker'),
-                start_line=section.get('start_line'),
                 end_marker=section.get('end_marker'),
-                separator=section.get('separator', ','),
+                separator=section.get('separator', ' '),
                 header_row=section.get('header_row'),
-                skip_comments=section.get('skip_comments', False),
-                skip_prefixes=section.get('skip_prefixes', [])
+                header_prefix=section.get('header_prefix')
             ))
         
         return cls(

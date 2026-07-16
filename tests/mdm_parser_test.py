@@ -30,8 +30,9 @@ class MDMPaserTest(unittest.TestCase):
         self.assertGreater(device.measurements.num_measurements, 0)
         ivs = device.measurements.get_iv()
         self.assertTrue(len(ivs) >= 1)
-        self.assertEqual(ivs[0].sweep_variable, 'V')
-        self.assertIn('I', ivs[0].currents)
+        self.assertEqual(ivs[0].sweep_variable, 'va')
+        self.assertEqual(set(ivs[0].currents.keys()), {'ia', 'ic'})
+        self.assertEqual(ivs[0].setup, 'iv_rev')
 
 
 if __name__ == '__main__':

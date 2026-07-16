@@ -140,6 +140,43 @@ class ConfigurableParserTest(unittest.TestCase):
         np.testing.assert_allclose(cv.capacitance, np.array([1.0, 2.0]))
         np.testing.assert_allclose(cv.conductance, np.array([0.1, 0.2]))
 
+    def test_infer_columns_and_measurement_type_from_setup(self):
+        metadata = {
+            'device_id': 'D1',
+            'temperature': 25.0,
+            'setup': 'cv'
+        }
+        data = [
+            DataSectionConfig(
+                columns=[],
+                start_marker='BEGIN DATA',
+                end_marker='END DATA',
+                separator='',
+                header_prefix='#',
+                infer_columns=True,
+                skip_comments=True
+            )
+        ]
+        config = FormatConfig('HeaderInfer', '.dat', metadata={}, data=data)
+        parser = ConfigurableParser(config=config)
+
+        raw_text = (
+            'BEGIN DATA\n'
+            '#V C G\n'
+            '0.0 1.0 0.1\n'
+            '1.0 2.0 0.2\n'
+            'END DATA\n'
+        )
+
+        measurements = parser._parse_measurements(raw_text, metadata)
+        self.assertEqual(measurements.num_measurements, 1)
+
+        cv = measurements.get_cv()[0]
+        self.assertEqual(cv.setup, 'cv')
+        self.assertEqual(cv.sweep_variable, 'V')
+        np.testing.assert_allclose(cv.capacitance, np.array([1.0, 2.0]))
+        np.testing.assert_allclose(cv.conductance, np.array([0.1, 0.2]))
+
 
 if __name__ == '__main__':
     unittest.main()
