@@ -1,1 +1,9 @@
 .vs*
+*.log
+*.tmp
+*.temp
+*.secret
+__pycache__/
+*.py[cod]
+*.so
+*.pyd

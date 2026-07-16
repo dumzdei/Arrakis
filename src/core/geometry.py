@@ -37,23 +37,23 @@ class Geometry(ABC):
 class DiodeGeometry(Geometry):
     """
     @brief  Геометрия диода.
-    @tparam area        Площадь, м²
-    @tparam perimeter   Периметр, м
-    @tparam num_devices Количество параллельных диодов
+    @tparam area       Площадь, м²
+    @tparam perimeter  Периметр, м
+    @tparam device_num Количество параллельных диодов
     """
     area: float
     perimeter: float
-    num_devices: int = 1
+    device_num: int = 1
 
     @property
     def geometry_type(self) -> str:
         return "DIODE"
 
     def effective_area(self) -> float:
-        return self.area * self.num_devices
+        return self.area * self.device_num
 
     def scale_factor(self) -> float:
-        return float(self.num_devices)
+        return float(self.device_num)
 
 
 @dataclass(frozen=True)

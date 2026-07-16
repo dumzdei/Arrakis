@@ -109,9 +109,7 @@ class MOSFETParameters(DeviceParameters):
 """
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
-from .geometry import Geometry, DiodeGeometry, MOSFETGeometry
-from .measurement import MeasurementSet
+from typing import Dict, List
 
 @dataclass
 class DeviceParameters(ABC):

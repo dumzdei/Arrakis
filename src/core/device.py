@@ -9,9 +9,9 @@
 
 from dataclasses import dataclass
 from typing import Dict
-from geometry import Geometry, DiodeGeometry, MOSFETGeometry
-from device_parameters import DeviceParameters
-from measurement import MeasurementSet
+from .geometry import Geometry, DiodeGeometry, MOSFETGeometry
+from .device_parameters import DeviceParameters
+from .measurement import MeasurementSet
 
 @dataclass
 class Device:
@@ -68,7 +68,7 @@ class Device:
             info.update({
                 "area": self.geometry.area,
                 "perimeter": self.geometry.perimeter,
-                "num_devices": self.geometry.num_devices,
+                "device_num": self.geometry.device_num,
             })
         elif isinstance(self.geometry, MOSFETGeometry):
             info.update({

@@ -1,0 +1,56 @@
+format:
+  name: "ICCAP MDM"
+  extension: ".mdm"
+  encoding: "utf-8"
+  metadata:
+    device_id:
+      pattern: 'DeviceName\s*"([^"]+)"'
+      type: string
+      required: true
+    device_type:
+      pattern: 'DevTechno\s*"([^"]+)"'
+      type: string
+      default: "DIODE"
+    temperature:
+      pattern: 'Temperature\s*"?([\d\.]+)"?'
+      type: float
+      default: 25.0
+    width:
+      pattern: 'MAIN\.W\s*"?([\d\.uUnNmMkK]+)"?'
+      type: float
+    length:
+      pattern: 'MAIN\.L\s*"?([\d\.uUnNmMkK]+)"?'
+      type: float
+    area:
+      pattern: '^\s*A\s+"?([\d\.eE\-\+uUnNmMkK]+)"?'
+      type: float
+    perimeter:
+      pattern: '^\s*B\s+"?([\d\.eE\-\+uUnNmMkK]+)"?'
+      type: float
+    device_num:
+      pattern: 'Device\s*"?([\d\.]+)"?'
+      type: int
+    fingers:
+      pattern: 'MAIN\.NF\s*"?([\d\.]+)"?'
+      type: int
+      default: 1
+    m:
+      pattern: 'MAIN\.M\s*"?([\d\.]+)"?'
+      type: int
+      default: 1
+  data:
+    - start_marker: 'BEGIN_DB'
+      end_marker: 'END_DB'
+      separator: ''
+      skip_comments: true
+      columns:
+        - name: 'V'
+          type: float
+        - name: 'I'
+          type: float
+          measurement: IV
+          response_variable: 'I'
+        - name: 'I2'
+          type: float
+          measurement: IV
+          response_variable: 'I2'
