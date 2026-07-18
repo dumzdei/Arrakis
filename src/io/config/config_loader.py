@@ -24,11 +24,12 @@ class ConfigLoader:
     @classmethod
     def load(cls, yaml_path: str) -> FormatConfig:
         """
-        @brief  Загрузить конфигурацию из YAML файла.
-        @param  yaml_path Путь к YAML файлу
-        @return Объект FormatConfig
-        @throws FileNotFoundError Если файл не найден
-        @throws ValueError Если YAML некорректен
+        @brief Загрузить конфигурацию из YAML файла.
+
+        @param[in] yaml_path Путь к YAML файлу
+        @return    Объект FormatConfig
+        @throws    FileNotFoundError Если файл не найден
+        @throws    ValueError Если YAML некорректен
         """
         path = Path(yaml_path)
         if not path.exists():
@@ -39,14 +40,15 @@ class ConfigLoader:
         
         config = FormatConfig.from_dict(raw_config)
         cls._configs[config.extension] = config
-        
         return config
     
     @classmethod
     def load_directory(cls, dir_path: str) -> int:
         """
-        @brief  Загрузить все YAML из директории.
-        @param  dir_path Путь к директории
+        @brief Загрузить все YAML из директории.
+
+        @param[in] dir_path Путь к директории
+
         @return Количество загруженных конфигураций
         """
         path = Path(dir_path)
@@ -66,8 +68,10 @@ class ConfigLoader:
     @classmethod
     def get_config(cls, extension: str) -> Optional[FormatConfig]:
         """
-        @brief  Получить конфигурацию по расширению.
-        @param  extension Расширение файла
+        @brief Получить конфигурацию по расширению.
+
+        @para[in] extension Расширение файла
+
         @return FormatConfig или None
         """
         if not extension.startswith('.'):

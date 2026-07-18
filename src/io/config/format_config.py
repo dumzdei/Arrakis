@@ -8,28 +8,26 @@
 @date 15.07.2026
 """
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict, Any, Union
+from typing import List, Optional, Dict, Any
 import re
 
 @dataclass
 class ColumnConfig:
     """
     @brief  Конфигурация одной колонки данных.
-    @tparam name              Имя колонки
-    @tparam type              Тип данных (float, int, string)
-    @tparam measurement       Тип измерения (IV, CV) или None
-    @tparam response_variable Для CV: имя емкости, для IV: имя тока
+
+    @tparam name Имя колонки
+    @tparam type Тип данных (float, int, string)
     """
     name: str
     type: str = "float"
-    measurement: Optional[str] = None
-    response_variable: Optional[str] = None
 
 
 @dataclass
 class MetadataFieldConfig:
     """
-    @brief  Конфигурация одного поля метаданных.
+    @brief Конфигурация одного поля метаданных.
+
     @tparam pattern  Regex-паттерн для извлечения значения
     @tparam type     Тип данных (float, int, string)
     @tparam default  Значение по умолчанию
@@ -48,24 +46,24 @@ class MetadataFieldConfig:
 @dataclass
 class DataSectionConfig:
     """
-    @brief  Конфигурация секции данных.
+    @brief Конфигурация секции данных.
+
     @tparam start_marker  Маркер начала данных
     @tparam end_marker    Маркер конца данных
     @tparam separator     Разделитель колонок
     @tparam header_prefix Маркер заголовков
-    @tparam header_row    Строка с заголовками
     """
-    start_marker: Optional[str] = None
-    end_marker: Optional[str] = None
+    start_marker: str
+    end_marker: str
     separator: str = " "
-    header_prefix: Optional[str] = None
-    header_row: Optional[int] = None
+    header_prefix: str
 
 
 @dataclass
 class FormatConfig:
     """
-    @brief  Полная конфигурация формата файла.
+    @brief Полная конфигурация формата файла.
+
     @tparam name      Название формата
     @tparam extension Расширение файла
     @tparam metadata  Конфигурация метаданных
@@ -80,8 +78,10 @@ class FormatConfig:
     @classmethod
     def from_dict(cls, config: Dict[str, Any]) -> 'FormatConfig':
         """
-        @brief  Создать конфигурацию из словаря (загруженного из YAML).
-        @param  config Словарь конфигурации
+        @brief Создать конфигурацию из словаря (загруженного из YAML).
+
+        @param[in] config Словарь конфигурации
+
         @return Объект FormatConfig
         """
         fmt = config.get('format', config)
@@ -89,26 +89,26 @@ class FormatConfig:
         metadata = {}
         for key, field_cfg in fmt.get('metadata', {}).items():
             metadata[key] = MetadataFieldConfig(
-                pattern=field_cfg['pattern'],
-                type=field_cfg.get('type', 'string'),
-                default=field_cfg.get('default'),
-                required=field_cfg.get('required', False)
+                pattern  = field_cfg['pattern'],
+                type     = field_cfg.get('type', 'string'),
+                default  = field_cfg.get('default'),
+                required = field_cfg.get('required', False)
             )
         
         data_sections = []
         for section in fmt.get('data', []):
             data_sections.append(DataSectionConfig(
-                start_marker=section.get('start_marker'),
-                end_marker=section.get('end_marker'),
-                separator=section.get('separator', ' '),
-                header_row=section.get('header_row'),
-                header_prefix=section.get('header_prefix')
+                start_marker  = section.get('start_marker'),
+                end_marker    = section.get('end_marker'),
+                separator     = section.get('separator', ' '),
+                header_row    = section.get('header_row'),
+                header_prefix = section.get('header_prefix')
             ))
         
         return cls(
-            name=fmt.get('name', 'Unknown'),
-            extension=fmt.get('extension', '.txt'),
-            metadata=metadata,
-            data=data_sections,
-            encoding=fmt.get('encoding', 'utf-8')
+            name      = fmt.get('name', 'Unknown'),
+            extension = fmt.get('extension', '.txt'),
+            metadata  = metadata,
+            data      = data_sections,
+            encoding  = fmt.get('encoding', 'utf-8')
         )

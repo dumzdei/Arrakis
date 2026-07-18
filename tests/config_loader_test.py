@@ -51,7 +51,7 @@ class ConfigLoaderTest(unittest.TestCase):
             self.assertEqual(config.name, 'Test Format')
             self.assertEqual(config.extension, '.dat')
             self.assertEqual(len(config.data), 1)
-            self.assertEqual(config.data[0].columns[1].measurement, 'IV')
+            self.assertIsInstance(config.data[0], DataSectionConfig)
             self.assertIs(config, ConfigLoader.get_config('.dat'))
             self.assertEqual(ConfigLoader.list_formats(), {'.dat': 'Test Format'})
 

@@ -25,21 +25,29 @@ class ConfigurableParserTest(unittest.TestCase):
     def tearDown(self):
         ConfigLoader._configs.clear()
 
+    def _make_column(self, name, type='float', response_variable=None):
+        return ColumnConfig(name=name, type=type, response_variable=response_variable)
+
+    def _make_data_section(self, start_marker=None, end_marker=None, separator=' ', header_prefix=None, header_row=None):
+        return DataSectionConfig(
+            start_marker=start_marker,
+            end_marker=end_marker,
+            separator=separator,
+            header_prefix=header_prefix,
+            header_row=header_row
+        )
+
     def make_config(self):
         metadata = {
             'device_id': MetadataFieldConfig(pattern=r'Device:\s*(\S+)', type='string', required=True),
             'temperature': MetadataFieldConfig(pattern=r'Temperature:\s*([\d\.]+)', type='float', default=25.0)
         }
         data = [
-            DataSectionConfig(
-                columns=[
-                    ColumnConfig(name='V', type='float'),
-                    ColumnConfig(name='I', type='float', measurement='IV', response_variable='I')
-                ],
+            self._make_data_section(
                 start_marker='BEGIN DATA',
                 end_marker='END DATA',
                 separator=',',
-                skip_comments=True
+                header_prefix='#'
             )
         ]
         return FormatConfig('Test', '.dat', metadata=metadata, data=data)
@@ -61,7 +69,7 @@ class ConfigurableParserTest(unittest.TestCase):
             'Device: D1\n'
             'Temperature: 42.5\n'
             'BEGIN DATA\n'
-            '# comment line\n'
+            '# V I\n'
             '0.0,1.0\n'
             '1.0,2.0\n'
             'END DATA\n'
@@ -109,16 +117,11 @@ class ConfigurableParserTest(unittest.TestCase):
             'temperature': 25.0
         }
         data = [
-            DataSectionConfig(
-                columns=[
-                    ColumnConfig(name='V', type='float'),
-                    ColumnConfig(name='C', type='float', measurement='CV', response_variable='C'),
-                    ColumnConfig(name='G', type='float', measurement='CV', response_variable='G')
-                ],
+            self._make_data_section(
                 start_marker='BEGIN DATA',
                 end_marker='END DATA',
                 separator=',',
-                skip_comments=True
+                header_prefix='#'
             )
         ]
         config = FormatConfig('CVTest', '.dat', metadata={}, data=data)
@@ -147,14 +150,11 @@ class ConfigurableParserTest(unittest.TestCase):
             'setup': 'cv'
         }
         data = [
-            DataSectionConfig(
-                columns=[],
+            self._make_data_section(
                 start_marker='BEGIN DATA',
                 end_marker='END DATA',
                 separator='',
-                header_prefix='#',
-                infer_columns=True,
-                skip_comments=True
+                header_prefix='#'
             )
         ]
         config = FormatConfig('HeaderInfer', '.dat', metadata={}, data=data)
