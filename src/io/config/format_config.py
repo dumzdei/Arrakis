@@ -101,7 +101,6 @@ class FormatConfig:
                 start_marker  = section.get('start_marker'),
                 end_marker    = section.get('end_marker'),
                 separator     = section.get('separator', ' '),
-                header_row    = section.get('header_row'),
                 header_prefix = section.get('header_prefix')
             ))
         

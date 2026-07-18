@@ -45,9 +45,5 @@ format:
   data:
     - start_marker: 'BEGIN_DB'
       end_marker: 'END_DB'
-      separator: ''
-      skip_comments: true
-      infer_columns: true
+      separator: ' '
       header_prefix: '#'
-      inferred_measurement: 'IV'
-      columns: []

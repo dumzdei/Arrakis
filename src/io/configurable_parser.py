@@ -151,10 +151,7 @@ class ConfigurableParser:
     def _parse_data_section(
         self, 
         raw_data: str, 
-        section_cfg: DataSectionConfig,
-        device_id: str,
-        condition: MeasurementCondition,
-        metadata: Dict[str, Any]
+        section_cfg: DataSectionConfig
     ) -> List:
         """Парсинг одной секции данных."""
         lines = raw_data.split('\n')
@@ -191,10 +188,7 @@ class ConfigurableParser:
                     self._parse_columns(
                         data_lines,
                         section_cfg,
-                        device_id,
-                        condition,
-                        section_columns,
-                        metadata.get('setup', '')
+                        section_columns
                     )
                 )
         
@@ -293,21 +287,22 @@ class ConfigurableParser:
         
         sweep_variable = None
         sweep_values = None
-        measurements_by_type: Dict[str, np.ndarray] = {}
+        measurements: Dict[str, np.ndarray] = {}
         for i, col_cfg in enumerate(section_columns):
             if i == 0:
                 sweep_variable = col_cfg.name
-                sweep_values = np.array(columns_data[col_cfg.name])
+                sweep_values = np.array(columns_data[sweep_variable])
             else:
                 var_name = col_cfg.name
-                measurements_by_type[var_name] = np.array(columns_data[col_cfg.name])
+                measurements[var_name] = np.array(columns_data[var_name])
 
         if sweep_values is None:
             return []
-
-        measurements = []
+        
+        measurement = []
         ## @todo TODO: закончить создание измерения из колонок
-        return measurements
+        
+        return measurement
 
     def parse_file(self, file_path: str) -> Device:
         """Полный разбор файла в объект Device."""
